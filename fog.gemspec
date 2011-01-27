@@ -7,14 +7,14 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'fog'
-  s.version           = '0.4.0'
-  s.date              = '2011-01-05'
+  s.version           = '0.4.1'
+  s.date              = '2011-01-21'
   s.rubyforge_project = 'fog'
 
   ## Make sure your summary is short. The description may be as long
   ## as you like.
   s.summary     = "brings clouds to you"
-  s.description = "The Ruby cloud computing library."
+  s.description = "The Ruby cloud services library."
 
   ## List the primary authors. If there are a bunch of authors, it's probably
   ## better to set the email to an email list or something. If you don't have
@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   ## List your runtime dependencies here. Runtime dependencies are those
   ## that are needed for an end user to actually USE your code.
   s.add_dependency('builder')
-  s.add_dependency('excon', '>=0.3.7')
+  s.add_dependency('excon', '>=0.4.0')
   s.add_dependency('formatador', '>=0.0.16')
   s.add_dependency('json')
   s.add_dependency('mime-types')
@@ -55,7 +55,7 @@ Gem::Specification.new do |s|
   ## those that are only needed during development
   s.add_development_dependency('rake')
   s.add_development_dependency('rspec', '1.3.1')
-  s.add_development_dependency('shindo', '0.1.12')
+  s.add_development_dependency('shindo', '0.2.0')
 
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {spec,tests}/*`.split("\n")

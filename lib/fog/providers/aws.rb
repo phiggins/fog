@@ -15,6 +15,7 @@ module Fog
     service(:elb,       'aws/elb')
     service(:iam,       'aws/iam')
     service(:s3,        'storage/aws')
+    service(:ses,       'aws/ses')
     service(:simpledb,  'aws/simpledb')
     service(:sns,       'aws/sns')
     service(:storage,   'storage/aws')
