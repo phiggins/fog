@@ -7,12 +7,14 @@ module Fog
       class BlockInstantiationError < StandardError; end
 
       class Server < Fog::Model
+        extend Fog::Deprecation
+        deprecate(:ip, :public_ip_address)
 
         identity :id
 
         attribute :name
         attribute :image_id     # id or name
-        attribute :ip
+        attribute :public_ip_address, :aliases => 'ip'
         attribute :memory       # server.ram
         attribute :state
         attribute :description  # Optional
@@ -31,6 +33,10 @@ module Fog
         def image
           requires :image_id
           connection.grid_image_get(:image => image_id)
+        end
+
+        def private_ip_address
+          nil
         end
 
         def ready?
@@ -69,6 +75,14 @@ module Fog
           options = {}
           options[:key_data] = [private_key] if private_key
           Fog::SSH.new(ip['ip'], username, options).run(commands)
+        end
+
+        def scp(local_path, remote_path)
+          requires :ip, :username
+
+          options = {}
+          options[:key_data] = [private_key] if private_key
+          Fog::SCP.new(ip['ip'], username, options).upload(local_path, remote_path)
         end
 
         def setup(credentials = {})

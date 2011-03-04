@@ -13,6 +13,9 @@ module Fog
       when 'Brightbox'
         require 'fog/compute/brightbox'
         Fog::Brightbox::Compute.new(attributes)
+      when 'Ecloud'
+        require 'fog/compute/ecloud'
+        Fog::Ecloud::Compute.new(attributes)
       when 'GoGrid'
         require 'fog/compute/go_grid'
         Fog::GoGrid::Compute.new(attributes)
@@ -25,12 +28,12 @@ module Fog
       when 'Rackspace'
         require 'fog/compute/rackspace'
         Fog::Rackspace::Compute.new(attributes)
+      when 'Voxel'
+        require 'fog/compute/voxel'
+        Fog::Voxel::Compute.new(attributes)
       when 'Slicehost'
         require 'fog/compute/slicehost'
         Fog::Slicehost::Compute.new(attributes)
-      when 'TerremarkEcloud'
-        require 'fog/compute/terremark_ecloud'
-        Fog::TerremarkEcloud::Compute.new(attributes)
       else
         raise ArgumentError.new("#{provider} is not a recognized compute provider")
       end

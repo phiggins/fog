@@ -47,6 +47,10 @@ module Fog
           connection.images(:server => self)
         end
 
+        def private_ip_address
+          nil
+        end
+
         def private_key_path
           @private_key_path ||= Fog.credentials[:private_key_path]
           @private_key_path &&= File.expand_path(@private_key_path)
@@ -54,6 +58,10 @@ module Fog
 
         def private_key
           @private_key ||= private_key_path && File.read(private_key_path)
+        end
+
+        def public_ip_address
+          addresses.first
         end
 
         def public_key_path
@@ -109,6 +117,14 @@ module Fog
           options = {}
           options[:key_data] = [private_key] if private_key
           Fog::SSH.new(addresses['public'].first, username, options).run(commands)
+        end
+
+        def scp(local_path, remote_path)
+          requires :addresses, :username
+
+          options = {}
+          options[:key_data] = [private_key] if private_key
+          Fog::SCP.new(addresses['public'].first, username, options).upload(local_path, remote_path)
         end
 
         def username

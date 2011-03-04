@@ -14,7 +14,6 @@ for provider, config in dns_providers
       }.merge(config[:zone_attributes] || {})
 
       @zone = provider[:dns].zones.create(zone_attributes)
-
       model_tests(@zone.records, record_attributes, config[:mocked])
 
       @zone.destroy

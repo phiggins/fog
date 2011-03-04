@@ -2,13 +2,12 @@ require 'yaml'
 
 module Fog
   require 'fog/core/deprecation'
-  extend Fog::Deprecation
-  self_deprecate(:config_path, :credentials_path)
 
   # Assign a new credential to use from configuration file
   #   @param [String, Symbol] new_credential name of new credential to use
   #   @ return [String, Symbol] name of the new credential
   def self.credential=(new_credential)
+    @credentials = nil
     @credential = new_credential
   end
 
@@ -24,6 +23,7 @@ module Fog
 
   # @return [String] The new path for credentials file
   def self.credentials_path=(new_credentials_path)
+    @credentials = nil
     @credential_path = new_credentials_path
   end
 
@@ -33,7 +33,7 @@ module Fog
     @credentials  ||= begin
       if File.exists?(credentials_path)
         credentials = YAML.load_file(credentials_path)
-        (credentials && credentials[credential]) or raise LoadError.new missing_credentials
+        (credentials && credentials[credential]) or raise LoadError.new(missing_credentials)
       else
         {}
       end
@@ -77,8 +77,12 @@ An alternate file may be used by placing its path in the FOG_RC environment vari
   :slicehost_password:
   :terremark_username:
   :terremark_password:
+  :voxel_api_key:
+  :voxel_api_secret:
   :zerigo_email:
   :zerigo_token:
+  :dnsimple_email:
+  :dnsimple_password:
 #
 # End of Fog Credentials File
 #######################################################

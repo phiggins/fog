@@ -1,21 +1,5 @@
 module Fog
   module Rackspace
-    class Servers
-
-      def self.new(attributes = {})
-        location = caller.first
-        warning = "[yellow][WARN] Fog::Rackspace::Servers#new is deprecated, use Fog::Rackspace::Compute#new instead[/]"
-        warning << " [light_black](" << location << ")[/] "
-        Formatador.display_line(warning)
-        Fog::Rackspace::Compute.new(attributes)
-      end
-
-    end
-  end
-end
-
-module Fog
-  module Rackspace
     class Compute < Fog::Service
 
       requires :rackspace_api_key, :rackspace_username
@@ -119,7 +103,8 @@ module Fog
                 'X-Auth-Token' => @auth_token
               }.merge!(params[:headers] || {}),
               :host     => @host,
-              :path     => "#{@path}/#{params[:path]}"
+              :path     => "#{@path}/#{params[:path]}",
+              :query    => ('ignore_awful_caching' << Time.now.to_i.to_s)
             }))
           rescue Excon::Errors::Unauthorized => error
             if JSON.parse(response.body)['unauthorized']['message'] == 'Invalid authentication token.  Please renew.'

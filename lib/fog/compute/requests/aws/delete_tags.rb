@@ -3,11 +3,13 @@ module Fog
     class Compute
       class Real
 
+        require 'fog/compute/parsers/aws/basic'
+
         # Remove tags from resources
         #
         # ==== Parameters
-        # * resources<~String> - One or more resources to tag
-        # * tags<~String> - hash of key value tag pairs to assign
+        # * resources<~String> - One or more resources to remove tags from
+        # * tags<~String> - hash of key value tag pairs to remove
         #
         # ==== Returns
         # * response<~Excon::Response>:
@@ -16,27 +18,22 @@ module Fog
         #     * 'return'<~Boolean> - success?
         def delete_tags(resources, tags)
           resources = [*resources]
-          for key, value in tags
-            if value.nil?
-              tags[key] = ''
-            end
-          end
           params = {}
           params.merge!(AWS.indexed_param('ResourceId', resources))
-          params.merge!(AWS.indexed_param('Tag.%d.Key', tags.keys))
-          params.merge!(AWS.indexed_param('Tag.%d.Value', tags.values))
+
+          # can not rely on indexed_param because nil values should be omitted
+          tags.keys.each_with_index do |key, index|
+            index += 1 # should start at 1 instead of 0
+            params.merge!("Tag.#{index}.Key" => key)
+            unless tags[key].nil?
+              params.merge("Tag.#{index}.Value" => tags[key])
+            end
+          end
+
           request({
-            'Action'            => 'CreateTags',
+            'Action'            => 'DeleteTags',
             :parser             => Fog::Parsers::AWS::Compute::Basic.new
           }.merge!(params))
-        end
-
-      end
-
-      class Mock
-
-        def delete_tags(resources, tags)
-          Fog::Mock.not_implemented
         end
 
       end

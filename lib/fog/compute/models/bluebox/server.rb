@@ -7,11 +7,6 @@ module Fog
       class BlockInstantiationError < StandardError; end
 
       class Server < Fog::Model
-        extend Fog::Deprecation
-        deprecate(:ssh_key, :public_key)
-        deprecate(:ssh_key=, :public_key=)
-        deprecate(:user, :username)
-        deprecate(:user=, :username=)
 
         identity :id
 
@@ -50,6 +45,10 @@ module Fog
           connection.images.get(image_id)
         end
 
+        def private_ip_address
+          nil
+        end
+
         def private_key_path
           @private_key_path ||= Fog.credentials[:private_key_path]
           @private_key_path &&= File.expand_path(@private_key_path)
@@ -57,6 +56,10 @@ module Fog
 
         def private_key
           @private_key ||= private_key_path && File.read(private_key_path)
+        end
+
+        def public_ip_address
+          ips.first
         end
 
         def public_key_path
@@ -81,13 +84,14 @@ module Fog
         def save
           raise Fog::Errors::Error.new('Resaving an existing object may create a duplicate') if identity
           requires :flavor_id, :image_id
-          options = if !password && !public_key
-            raise(ArgumentError, "password or public_key is required for this operation")
-          elsif public_key
-            {'ssh_public_key' => public_key}
-          elsif @password
-            {'password' => password}
+          options = {}
+
+          if identity.nil?  # new record
+            raise(ArgumentError, "password or public_key is required for this operation") if !password && !public_key
+            options['ssh_public_key'] = public_key if @public_key
+            options['password'] = password if @password
           end
+
           options['username'] = username
           data = connection.create_block(flavor_id, image_id, options)
           merge_attributes(data.body)
@@ -113,6 +117,14 @@ module Fog
           options = {}
           options[:key_data] = [private_key] if private_key
           Fog::SSH.new(ips.first['address'], username, options).run(commands)
+        end
+
+        def scp(local_path, remote_path)
+          requires :ips, :username
+
+          options = {}
+          options[:key_data] = [private_key] if private_key
+          Fog::SCP.new(ips.first['address'], username, options).upload(local_path, remote_path)
         end
 
         def username

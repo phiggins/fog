@@ -6,9 +6,6 @@ module Fog
     class Storage
 
       class Directory < Fog::Model
-        extend Fog::Deprecation
-        deprecate(:name, :key)
-        deprecate(:name=, :key=)
 
         identity  :key, :aliases => 'name'
 
@@ -18,6 +15,7 @@ module Fog
         def destroy
           requires :key
           connection.delete_container(key)
+          connection.cdn.put_container(key, 'X-CDN-Enabled' => 'False')
           true
         rescue Excon::Errors::NotFound
           false

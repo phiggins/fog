@@ -117,12 +117,10 @@ class Brightbox
 
         SERVER_TYPE = {
           "name"            => String,
+          "handle"          => Fog::Nullable::String,
           "cores"           => Integer,
-          "created_at"      => String,
           "resource_type"   => String,
-          "updated_at"      => String,
           "disk_size"       => Integer,
-          "default"         => Fog::Boolean,
           "url"             => String,
           "id"              => String,
           "ram"             => Integer,
@@ -203,7 +201,6 @@ class Brightbox
           "id"              => String,
           "resource_type"   => String,
           "url"             => String,
-          "listed"          => Fog::Boolean,
           "name"            => String,
           "status"          => String,
           "hostname"        => String,
@@ -346,7 +343,8 @@ class Brightbox
           "created_at"      => String,
           "deleted_at"      => Fog::Nullable::String,
           "account"         => Brightbox::Compute::Formats::Nested::ACCOUNT,
-          "nodes"           => [Brightbox::Compute::Formats::Nested::SERVER]
+          "nodes"           => [Brightbox::Compute::Formats::Nested::SERVER],
+          "cloud_ips"       => [Brightbox::Compute::Formats::Nested::CLOUD_IP]
         }
 
         SERVER = {
@@ -360,6 +358,9 @@ class Brightbox
           "started_at"      => Fog::Nullable::String,
           "deleted_at"      => Fog::Nullable::String,
           "user_data"       => Fog::Nullable::String,
+          "console_url"     => Fog::Nullable::String,
+          "console_token"   => Fog::Nullable::String,
+          "console_token_expires" => Fog::Nullable::String,
           "account"         => Brightbox::Compute::Formats::Nested::ACCOUNT,
           "server_type"     => Brightbox::Compute::Formats::Nested::SERVER_TYPE,
           "cloud_ips"       => [Brightbox::Compute::Formats::Nested::CLOUD_IP],
@@ -397,7 +398,7 @@ class Brightbox
           "id"              => String,
           "resource_type"   => String,
           "url"             => String,
-          "handle"          => Fog::Nullable::String
+          "handle"          => String
         }
 
       end

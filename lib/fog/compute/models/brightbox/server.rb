@@ -71,8 +71,22 @@ module Fog
           connection.images.get(image_id)
         end
 
+        def private_ip_address
+          interfaces.first
+        end
+
+        def public_ip_address
+          cloud_ips.first
+        end
+
         def ready?
           status == 'active'
+        end
+
+        def activate_console
+          requires :identity
+          response = connection.activate_console_server(identity)
+          [response["console_url"], response["console_token"], response["console_token_expires"]]
         end
 
         def save

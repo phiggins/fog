@@ -3,9 +3,11 @@ class Bluebox < Fog::Bin
 
     def class_for(key)
       case key
-      when :blocks, :compute
+      when :compute
         Fog::Bluebox::Compute
-      else 
+      when :dns
+        Fog::Bluebox::DNS
+      else
         raise ArgumentError, "Unsupported #{self} service: #{key}"
       end
     end
@@ -13,14 +15,10 @@ class Bluebox < Fog::Bin
     def [](service)
       @@connections ||= Hash.new do |hash, key|
         hash[key] = case key
-        when :blocks
-          location = caller.first
-          warning = "[yellow][WARN] Bluebox[:blocks] is deprecated, use Bluebox[:compute] instead[/]"
-          warning << " [light_black](" << location << ")[/] "
-          Formatador.display_line(warning)
-          Fog::Compute.new(:provider => 'Bluebox')
         when :compute
           Fog::Compute.new(:provider => 'Bluebox')
+        when :dns
+          Fog::DNS.new(:provider => 'Bluebox')
         else
           raise ArgumentError, "Unrecognized service: #{service}"
         end
@@ -29,7 +27,7 @@ class Bluebox < Fog::Bin
     end
 
     def services
-      [:compute]
+      Fog::Bluebox.services
     end
 
   end

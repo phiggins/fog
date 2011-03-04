@@ -20,6 +20,7 @@ if Fog.mock?
     :google_storage_access_key_id     => 'google_storage_access_key_id',
     :google_storage_secret_access_key => 'google_storage_secret_access_key',
     :linode_api_key                   => 'linode_api_key',
+#    :local_root                       => '~/.fog'
     :new_servers_password             => 'new_servers_password',
     :new_servers_username             => 'new_servers_username',
 #    :public_key_path                  => '~/.ssh/id_rsa.pub',
@@ -27,6 +28,8 @@ if Fog.mock?
     :rackspace_api_key                => 'rackspace_api_key',
     :rackspace_username               => 'rackspace_username',
     :slicehost_password               => 'slicehost_password',
+    :voxel_api_key                    => 'voxel_api_key',
+    :voxel_api_secret                 => 'voxel_api_secret',
     :zerigo_email                     => 'zerigo_email',
     :zerigo_token                     => 'zerigo_token'
   })
