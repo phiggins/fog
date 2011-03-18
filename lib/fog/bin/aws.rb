@@ -23,6 +23,8 @@ class AWS < Fog::Bin
         Fog::AWS::Storage
       when :rds
         Fog::AWS::RDS
+      when :sns
+        Fog::AWS::SNS
       else
         # @todo Replace most instances of ArgumentError with NotImplementedError
         # @todo For a list of widely supported Exceptions, see:
@@ -54,6 +56,8 @@ class AWS < Fog::Bin
           Fog::AWS::SES.new
         when :storage
           Fog::Storage.new(:provider => 'AWS')
+        when :sns
+          Fog::AWS::SNS.new
         else
           raise ArgumentError, "Unrecognized service: #{key.inspect}"
         end
